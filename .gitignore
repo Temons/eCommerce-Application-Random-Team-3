@@ -40,3 +40,5 @@ coverage/
 
 # Optional stylelint cache
 .stylelintcache
+
+package-lock.json
