@@ -7,21 +7,25 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export default {
-  entry: './src/index.ts',
+  entry: './src/index.tsx',
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist'),
   },
   resolve: {
-    extensions: ['.ts', '.js'],
+    extensions: ['.ts', '.js', '.tsx'],
   },
   module: {
     rules: [
       {
-        test: /\.ts$/,
+        test: /\.(ts|tsx)$/,
         use: 'ts-loader',
         exclude: /node_modules/,
       },
+      {
+        test: /\.s[ac]ss$/i,
+        use: ['style-loader', 'css-loader', 'sass-loader'],
+      }
     ],
   },
   plugins: [
@@ -31,7 +35,11 @@ export default {
     }),
   ],
   devServer: {
-    static: './dist',
+    static: {
+      directory: path.join(__dirname, 'dist'),
+    },
     open: true,
+    historyApiFallback: true,
+    hot: true,
   },
 };

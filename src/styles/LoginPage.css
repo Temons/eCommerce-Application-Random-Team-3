@@ -1,0 +1,23 @@
+.main-block {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-block {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+  padding: 25px;
+  background-color: beige;
+}
+.login-block .username-block,
+.login-block .password-block {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  gap: 10px;
+}/*# sourceMappingURL=LoginPage.css.map */
