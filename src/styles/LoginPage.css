@@ -1,7 +1,13 @@
+body {
+  margin: 0px;
+}
+
 .main-block {
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: aliceblue;
+  height: 100vh;
 }
 
 .login-block {
@@ -9,7 +15,7 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  gap: 10px;
+  gap: 15px;
   padding: 25px;
   background-color: beige;
 }
@@ -20,4 +26,14 @@
   align-items: center;
   flex-direction: row;
   gap: 10px;
+}
+.login-block .username-block input,
+.login-block .password-block input {
+  padding: 5px;
+}
+.login-block .login-btn {
+  padding: 10px;
+}
+.login-block .register-link {
+  margin: 0px;
 }/*# sourceMappingURL=LoginPage.css.map */
