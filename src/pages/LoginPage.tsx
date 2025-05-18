@@ -1,6 +1,5 @@
 import React from 'react';
 import '../styles/LoginPage.scss';
-import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
 const LoginPage = () => {
