@@ -5,12 +5,6 @@ import { Link } from 'react-router-dom';
 
 const LoginPage = () => {
 
-  const navigate = useNavigate();
-
-  const goToRegister = () => {
-    navigate('/register');
-  };
-
   return (
     <div className="main-block">
       <div className="login-block">
