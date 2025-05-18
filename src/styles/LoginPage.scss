@@ -15,28 +15,53 @@ body {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  gap: 15px;
   padding: 25px;
   background-color: beige;
+  gap: 15px;
 
-  .username-block,
-  .password-block {
+  .login-form {
+
     display: flex;
     justify-content: center;
-    align-items: center;
-    flex-direction: row;
-    gap: 10px;
+    flex-direction: column;
+    gap: 20px;
 
-    input {
-      padding: 5px;
+    .email-block-errors,
+    .password-block-errors {
+      display: flex;
+      justify-content: start;
+      flex-direction: column;
+
+      .email-block,
+      .password-block {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-direction: row;
+        gap: 10px;
+        flex-wrap: wrap;
+
+        input {
+          padding: 5px;
+        }
+      }
+
+      .error-placeholder {
+        color: red;
+        margin: 0px;
+        min-height: 1.2rem;
+      }
     }
-  }
 
-  .login-btn {
-    padding: 10px;
-  }
 
-  .register-link {
-    margin: 0px;
+
+
+    .login-btn {
+      padding: 10px;
+    }
+
+    .register-link {
+      margin: 0px;
+    }
   }
 }

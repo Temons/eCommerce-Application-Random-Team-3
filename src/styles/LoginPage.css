@@ -15,25 +15,48 @@ body {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  gap: 15px;
   padding: 25px;
   background-color: beige;
+  gap: 15px;
 }
-.login-block .username-block,
-.login-block .password-block {
+.login-block .login-form {
   display: flex;
   justify-content: center;
+  flex-direction: column;
+  gap: 20px;
+}
+.login-block .login-form .email-block-errors,
+.login-block .login-form .password-block-errors {
+  display: flex;
+  justify-content: start;
+  flex-direction: column;
+}
+.login-block .login-form .email-block-errors .email-block,
+.login-block .login-form .email-block-errors .password-block,
+.login-block .login-form .password-block-errors .email-block,
+.login-block .login-form .password-block-errors .password-block {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
   flex-direction: row;
   gap: 10px;
+  flex-wrap: wrap;
 }
-.login-block .username-block input,
-.login-block .password-block input {
+.login-block .login-form .email-block-errors .email-block input,
+.login-block .login-form .email-block-errors .password-block input,
+.login-block .login-form .password-block-errors .email-block input,
+.login-block .login-form .password-block-errors .password-block input {
   padding: 5px;
 }
-.login-block .login-btn {
+.login-block .login-form .email-block-errors .error-placeholder,
+.login-block .login-form .password-block-errors .error-placeholder {
+  color: red;
+  margin: 0px;
+  min-height: 1.2rem;
+}
+.login-block .login-form .login-btn {
   padding: 10px;
 }
-.login-block .register-link {
+.login-block .login-form .register-link {
   margin: 0px;
 }/*# sourceMappingURL=LoginPage.css.map */
