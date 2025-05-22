@@ -1,8 +1,23 @@
 import React, { useState } from 'react';
 import '../styles/LoginPage.scss';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { loginCustomer } from '../api/commerceToolsAuth';
+
+
 
 const LoginPage = () => {
+  // console.log('AUTH URL:', process.env.REACT_APP_CTP_AUTH_URL);
+  // console.log('PROJECT KEY:', process.env.REACT_APP_CTP_PROJECT_KEY);
+  // console.log('CLIENT ID:', process.env.REACT_APP_CTP_CLIENT_ID);
+  // console.log('CLIENT SECRET:', process.env.REACT_APP_CTP_CLIENT_SECRET);
+  // console.log('SCOPES:', process.env.REACT_APP_CTP_SCOPES);
+  // console.log('API URL:', process.env.REACT_APP_CTP_API_URL);
+  // console.log(process.env);
+
+
+
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
@@ -47,7 +62,7 @@ const LoginPage = () => {
     setErrors((prev) => ({ ...prev, password: validatePassword(value) }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const emailError = validateEmail(email);
@@ -57,6 +72,32 @@ const LoginPage = () => {
 
     if (!emailError && !passwordError) {
       console.log('Login with:', { email, password });
+      try {
+        const data = await loginCustomer(email, password);
+        console.log('Logged in! Access token:', data.access_token);
+
+        localStorage.setItem('access_token', data.access_token);
+        localStorage.setItem('refresh_token', data.refresh_token);
+        localStorage.setItem('customer_id', data.customer?.id || '');
+        localStorage.setItem('customer_email', data.customer?.email || '');
+
+        navigate('/main');
+
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          console.error(err.message);
+          setErrors((prev) => ({
+            ...prev,
+            password: 'Invalid email or password',
+          }));
+        } else {
+          console.error('Unknown error:', err);
+          setErrors((prev) => ({
+            ...prev,
+            password: 'Login failed. Please try again.',
+          }));
+        }
+      }
     }
   };
 
@@ -68,34 +109,34 @@ const LoginPage = () => {
         <form onSubmit={handleSubmit} className="login-form">
           <div className="email-block-errors">
             <div className='email-block'>
-            <label htmlFor="email">Email</label>
-            <input
-              type="email"
-              id="email"
-              placeholder="Enter your Email"
-              value={email}
-              onChange={handleEmailChange}
-            />
-          </div>
-          <p className="error-placeholder">
-            {errors.email || ''}
-          </p>
+              <label htmlFor="email">Email</label>
+              <input
+                type="email"
+                id="email"
+                placeholder="Enter your Email"
+                value={email}
+                onChange={handleEmailChange}
+              />
+            </div>
+            <p className="error-placeholder">
+              {errors.email || ''}
+            </p>
           </div>
 
           <div className="password-block-errors">
             <div className='password-block'>
-            <label htmlFor="password">Password</label>
-            <input
-              type={showPassword ? 'text' : 'password'}
-              id="password"
-              placeholder="Enter your Password"
-              value={password}
-              onChange={handlePasswordChange}
-            />
-          </div>
-          <p className="error-placeholder">
-            {errors.password || ''}
-          </p>
+              <label htmlFor="password">Password</label>
+              <input
+                type={showPassword ? 'text' : 'password'}
+                id="password"
+                placeholder="Enter your Password"
+                value={password}
+                onChange={handlePasswordChange}
+              />
+            </div>
+            <p className="error-placeholder">
+              {errors.password || ''}
+            </p>
           </div>
 
           <div className="show-password-toggle">
