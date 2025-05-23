@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import '../styles/RegistrationPage.scss';
 import { registerCustomer } from '../api/commerceToolsRegistration';
+import { countries } from '../constants/countries';
 
 interface FormData {
   email: string;
@@ -108,9 +109,9 @@ const RegistrationPage = () => {
     return undefined;
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type, checked } = e.target;
-    const newValue = type === 'checkbox' ? checked : value;
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value, type } = e.target;
+    const newValue = type === 'checkbox' ? (e.target as HTMLInputElement).checked : value;
     
     setFormData(prev => ({
       ...prev,
@@ -348,14 +349,20 @@ const RegistrationPage = () => {
 
             <div className="form-group">
               <label htmlFor="country">Country</label>
-              <input
-                type="text"
+              <select
                 id="country"
                 name="country"
                 value={formData.country}
                 onChange={handleInputChange}
                 className={errors.country ? 'error' : ''}
-              />
+              >
+                <option value="">Select a country</option>
+                {countries.map(country => (
+                  <option key={country.code} value={country.name}>
+                    {country.name}
+                  </option>
+                ))}
+              </select>
               <p className="error-placeholder">{errors.country}</p>
             </div>
           </div>
@@ -416,14 +423,20 @@ const RegistrationPage = () => {
 
                 <div className="form-group">
                   <label htmlFor="billingCountry">Country</label>
-                  <input
-                    type="text"
+                  <select
                     id="billingCountry"
                     name="billingCountry"
                     value={formData.billingCountry}
                     onChange={handleInputChange}
                     className={errors.billingCountry ? 'error' : ''}
-                  />
+                  >
+                    <option value="">Select a country</option>
+                    {countries.map(country => (
+                      <option key={country.code} value={country.name}>
+                        {country.name}
+                      </option>
+                    ))}
+                  </select>
                   <p className="error-placeholder">{errors.billingCountry}</p>
                 </div>
               </>
