@@ -17,6 +17,36 @@ interface RegistrationData {
   }[];
 }
 
+const getAnonymousToken = async () => {
+  const clientId = process.env.REACT_APP_CTP_CLIENT_ID;
+  const clientSecret = process.env.REACT_APP_CTP_CLIENT_SECRET;
+  const authUrl = process.env.REACT_APP_CTP_AUTH_URL;
+  const projectKey = process.env.REACT_APP_CTP_PROJECT_KEY;
+  const scopes = process.env.REACT_APP_CTP_SCOPES;
+
+  if (!clientId || !clientSecret || !authUrl || !projectKey || !scopes) {
+    throw new Error('Missing environment variables for authentication');
+  }
+
+  try {
+    const response = await axios.post(
+      `${authUrl}/oauth/token`,
+      `grant_type=client_credentials&scope=${scopes}`,
+      {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          Authorization: `Basic ${btoa(`${clientId}:${clientSecret}`)}`,
+        },
+      }
+    );
+
+    return response.data.access_token;
+  } catch (error) {
+    console.error('Failed to get anonymous token:', error);
+    throw new Error('AUTHENTICATION_FAILED');
+  }
+};
+
 export const registerCustomer = async (data: RegistrationData) => {
   const clientId = process.env.REACT_APP_CTP_CLIENT_ID;
   const clientSecret = process.env.REACT_APP_CTP_CLIENT_SECRET;
@@ -27,24 +57,27 @@ export const registerCustomer = async (data: RegistrationData) => {
     throw new Error('Missing environment variables for registration');
   }
 
-  const url = `${apiUrl}/${projectKey}/customers`;
-
-  const customerData = {
-    email: data.email,
-    password: data.password,
-    firstName: data.firstName,
-    lastName: data.lastName,
-    dateOfBirth: data.dateOfBirth,
-    addresses: data.addresses,
-    defaultShippingAddress: 0, // Index of the default shipping address
-    defaultBillingAddress: data.addresses.length > 1 ? 1 : 0, // Index of the default billing address
-  };
-
   try {
+    // Get anonymous token first
+    const token = await getAnonymousToken();
+
+    const url = `${apiUrl}/${projectKey}/customers`;
+
+    const customerData = {
+      email: data.email,
+      password: data.password,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      dateOfBirth: data.dateOfBirth,
+      addresses: data.addresses,
+      defaultShippingAddress: 0,
+      defaultBillingAddress: data.addresses.length > 1 ? 1 : 0,
+    };
+
     const response = await axios.post(url, customerData, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Basic ${btoa(`${clientId}:${clientSecret}`)}`,
+        Authorization: `Bearer ${token}`,
       },
     });
 
