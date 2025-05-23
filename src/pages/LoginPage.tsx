@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import '../styles/LoginPage.scss';
 import { Link, useNavigate } from 'react-router-dom';
 import { loginCustomer } from '../api/commerceToolsAuth';
+import { useAuth } from '../contexts/AuthContext';
+
 
 
 
@@ -17,12 +19,15 @@ const LoginPage = () => {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const token = localStorage.getItem('access_token');
-    if (token) {
-      navigate('/main', { replace: true });
-    }
-  }, [navigate]);
+  const { setAuthToken } = useAuth();
+
+  const { authToken } = useAuth();
+
+useEffect(() => {
+  if (authToken) {
+    navigate('/main', { replace: true });
+  }
+}, [authToken, navigate]);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -88,7 +93,7 @@ const LoginPage = () => {
       try {
         const data = await loginCustomer(email, password);
         console.log('Logged in! Access token:', data.access_token);
-        localStorage.setItem('access_token', data.access_token);
+        setAuthToken(data.access_token);
         navigate('/main');
       } catch (err: unknown) {
         if (err instanceof Error) {
