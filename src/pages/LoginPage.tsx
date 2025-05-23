@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../styles/LoginPage.scss';
 import { Link, useNavigate } from 'react-router-dom';
 import { loginCustomer } from '../api/commerceToolsAuth';
@@ -16,6 +16,13 @@ const LoginPage = () => {
 
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem('access_token');
+    if (token) {
+      navigate('/main', { replace: true });
+    }
+  }, [navigate]);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
