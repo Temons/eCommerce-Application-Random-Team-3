@@ -1,4 +1,4 @@
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 
 // console.log('CLIENT_ID:', process.env.REACT_APP_CTP_CLIENT_ID);
 // console.log('AUTH_URL:', process.env.REACT_APP_CTP_AUTH_URL);
@@ -6,18 +6,13 @@ import axios, { AxiosError } from 'axios';
 // console.log('SCOPES:', process.env.REACT_APP_CTP_SCOPES);
 
 export const loginCustomer = async (email: string, password: string) => {
-  const REACT_APP_CTP_CLIENT_ID = process.env.REACT_APP_CTP_CLIENT_ID;
-  const REACT_APP_CTP_CLIENT_SECRET = process.env.REACT_APP_CTP_CLIENT_SECRET;
-  const REACT_APP_CTP_AUTH_URL = process.env.REACT_APP_CTP_AUTH_URL;
-  const REACT_APP_CTP_SCOPES = process.env.REACT_APP_CTP_SCOPES;
-  const REACT_APP_CTP_PROJECT_KEY = process.env.REACT_APP_CTP_PROJECT_KEY;
-
-  console.log('ENV VARS:', {
-    REACT_APP_CTP_AUTH_URL,
-    REACT_APP_CTP_PROJECT_KEY,
+  const {
     REACT_APP_CTP_CLIENT_ID,
     REACT_APP_CTP_CLIENT_SECRET,
-  });
+    REACT_APP_CTP_AUTH_URL,
+    REACT_APP_CTP_SCOPES,
+    REACT_APP_CTP_PROJECT_KEY,
+  } = process.env;
 
   if (!REACT_APP_CTP_AUTH_URL || !REACT_APP_CTP_PROJECT_KEY || !REACT_APP_CTP_CLIENT_ID || !REACT_APP_CTP_CLIENT_SECRET) {
     throw new Error('Missing environment variables for authentication');
@@ -45,13 +40,19 @@ export const loginCustomer = async (email: string, password: string) => {
     return response.data;
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
-      const axiosError = error as AxiosError<{ message: string }>;
-      const message = axiosError.response?.data?.message;
-      if (message) {
-        throw new Error(message);
+      const status = error.response?.status;
+      const message = error.response?.data?.message;
+
+
+      if (status === 400 && message?.includes('credentials')) {
+        throw new Error('INVALID_CREDENTIALS');
+      }
+
+      if (status === 401) {
+        throw new Error('UNAUTHORIZED');
       }
     }
 
-    throw new Error('Login failed. Please try again.');
+    throw new Error('LOGIN_FAILED');
   }
 };

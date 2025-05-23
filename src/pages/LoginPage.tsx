@@ -6,13 +6,12 @@ import { loginCustomer } from '../api/commerceToolsAuth';
 
 
 const LoginPage = () => {
-  // console.log('AUTH URL:', process.env.REACT_APP_CTP_AUTH_URL);
-  // console.log('PROJECT KEY:', process.env.REACT_APP_CTP_PROJECT_KEY);
-  // console.log('CLIENT ID:', process.env.REACT_APP_CTP_CLIENT_ID);
-  // console.log('CLIENT SECRET:', process.env.REACT_APP_CTP_CLIENT_SECRET);
-  // console.log('SCOPES:', process.env.REACT_APP_CTP_SCOPES);
-  // console.log('API URL:', process.env.REACT_APP_CTP_API_URL);
-  // console.log(process.env);
+  console.log('AUTH URL:', process.env.REACT_APP_CTP_AUTH_URL);
+  console.log('PROJECT KEY:', process.env.REACT_APP_CTP_PROJECT_KEY);
+  console.log('CLIENT ID:', process.env.REACT_APP_CTP_CLIENT_ID);
+  console.log('CLIENT SECRET:', process.env.REACT_APP_CTP_CLIENT_SECRET);
+  console.log('SCOPES:', process.env.REACT_APP_CTP_SCOPES);
+  console.log('API URL:', process.env.REACT_APP_CTP_API_URL);
 
 
 
@@ -53,13 +52,19 @@ const LoginPage = () => {
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setEmail(value);
-    setErrors((prev) => ({ ...prev, email: validateEmail(value) }));
+    setErrors((prev) => ({
+      ...prev,
+      email: validateEmail(value) || undefined,
+    }));
   };
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setPassword(value);
-    setErrors((prev) => ({ ...prev, password: validatePassword(value) }));
+    setErrors((prev) => ({
+      ...prev,
+      password: validatePassword(value) || undefined,
+    }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -72,34 +77,35 @@ const LoginPage = () => {
 
     if (!emailError && !passwordError) {
       console.log('Login with:', { email, password });
+
       try {
         const data = await loginCustomer(email, password);
         console.log('Logged in! Access token:', data.access_token);
-
         localStorage.setItem('access_token', data.access_token);
-        localStorage.setItem('refresh_token', data.refresh_token);
-        localStorage.setItem('customer_id', data.customer?.id || '');
-        localStorage.setItem('customer_email', data.customer?.email || '');
-
         navigate('/main');
-
       } catch (err: unknown) {
         if (err instanceof Error) {
           console.error(err.message);
-          setErrors((prev) => ({
-            ...prev,
-            password: 'Invalid email or password',
-          }));
-        } else {
-          console.error('Unknown error:', err);
-          setErrors((prev) => ({
-            ...prev,
-            password: 'Login failed. Please try again.',
-          }));
+
+          if (err.message === 'INVALID_CREDENTIALS') {
+            setErrors({
+              email: 'Email or password is incorrect.',
+              password: 'Email or password is incorrect.',
+            });
+          } else if (err.message === 'UNAUTHORIZED') {
+            setErrors({
+              email: 'Unauthorized request. Please contact support.',
+            });
+          } else {
+            setErrors({
+              password: 'Login failed. Please try again later.',
+            });
+          }
         }
       }
     }
   };
+
 
   return (
     <div className="main-block">
@@ -116,11 +122,10 @@ const LoginPage = () => {
                 placeholder="Enter your Email"
                 value={email}
                 onChange={handleEmailChange}
+                className={errors.email ? 'error' : ''}
               />
             </div>
-            <p className="error-placeholder">
-              {errors.email || ''}
-            </p>
+            <p className="error-placeholder">{errors.email}</p>
           </div>
 
           <div className="password-block-errors">
@@ -132,11 +137,10 @@ const LoginPage = () => {
                 placeholder="Enter your Password"
                 value={password}
                 onChange={handlePasswordChange}
+                className={errors.password ? 'error' : ''}
               />
             </div>
-            <p className="error-placeholder">
-              {errors.password || ''}
-            </p>
+            <p className="error-placeholder">{errors.password}</p>
           </div>
 
           <div className="show-password-toggle">

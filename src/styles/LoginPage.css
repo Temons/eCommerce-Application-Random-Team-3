@@ -59,4 +59,16 @@ body {
 }
 .login-block .login-form .register-link {
   margin: 0px;
+}
+
+input.error {
+  border: 1px solid red;
+}
+
+.error-placeholder {
+  color: red;
+  font-size: 0.9rem;
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
 }/*# sourceMappingURL=LoginPage.css.map */
