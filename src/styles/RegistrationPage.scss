@@ -1,10 +1,11 @@
 .main-block {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   background-color: aliceblue;
   min-height: 100vh;
-  padding: 2rem 0;
+  padding: 2rem 1rem;
+  overflow-x: hidden;
 }
 
 .registration-block {
@@ -17,21 +18,24 @@
   gap: 1.5rem;
   width: 100%;
   max-width: 800px;
-  margin: 0 1rem;
+  margin: 0 auto;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow-x: hidden;
 
   h1 {
     margin: 0;
     color: #333;
     font-size: 2rem;
+    text-align: center;
   }
 
   .registration-form {
     display: flex;
     flex-direction: column;
     gap: 2rem;
-    width: 100%;
+    //width: 100%;
+    max-width: 100%;
 
     .form-section {
       display: flex;
@@ -41,6 +45,7 @@
       background-color: white;
       border-radius: 6px;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      width: 100%;
 
       h2 {
         margin: 0;
@@ -55,6 +60,7 @@
       display: flex;
       flex-direction: column;
       gap: 0.5rem;
+      width: 100%;
 
       label {
         font-weight: 500;
@@ -67,6 +73,8 @@
         border-radius: 4px;
         font-size: 1rem;
         transition: border-color 0.2s;
+        width: 100%;
+        box-sizing: border-box;
 
         &:focus {
           outline: none;
@@ -86,6 +94,7 @@
         input[type="checkbox"] {
           width: 1.2rem;
           height: 1.2rem;
+          flex-shrink: 0;
         }
 
         label {
@@ -111,6 +120,9 @@
       font-weight: 500;
       cursor: pointer;
       transition: background-color 0.2s;
+      width: 100%;
+      max-width: 300px;
+      margin: 0 auto;
 
       &:hover {
         background-color: #357abd;
@@ -140,14 +152,52 @@
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
+  .main-block {
+    padding: 1rem;
+  }
+
+  .registration-block {
+    padding: 1.5rem;
+    margin: 0;
+
+    .registration-form {
+      gap: 1.5rem;
+
+      .form-section {
+        padding: 1rem;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
   .registration-block {
     padding: 1rem;
-    margin: 0 0.5rem;
+
+    h1 {
+      font-size: 1.75rem;
+    }
 
     .registration-form {
       .form-section {
-        padding: 1rem;
+        padding: 0.75rem;
+
+        h2 {
+          font-size: 1.25rem;
+        }
+      }
+
+      .form-group {
+        input {
+          padding: 0.5rem;
+          font-size: 0.9rem;
+        }
+      }
+
+      .register-btn {
+        padding: 0.75rem;
+        font-size: 1rem;
       }
     }
   }

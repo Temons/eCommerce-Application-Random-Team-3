@@ -255,6 +255,16 @@ const RegistrationPage = () => {
               <p className="error-placeholder">{errors.password}</p>
             </div>
 
+            <div className="form-group checkbox">
+            <input
+              type="checkbox"
+              id="showPassword"
+              checked={showPassword}
+              onChange={() => setShowPassword(!showPassword)}
+            />
+            <label htmlFor="showPassword">Show password</label>
+          </div>
+
             <div className="form-group">
               <label htmlFor="firstName">First Name</label>
               <input
@@ -418,16 +428,6 @@ const RegistrationPage = () => {
                 </div>
               </>
             )}
-          </div>
-
-          <div className="form-group checkbox">
-            <input
-              type="checkbox"
-              id="showPassword"
-              checked={showPassword}
-              onChange={() => setShowPassword(!showPassword)}
-            />
-            <label htmlFor="showPassword">Show password</label>
           </div>
 
           <button type="submit" className="register-btn">Register</button>
