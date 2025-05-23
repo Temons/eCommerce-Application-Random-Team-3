@@ -17,6 +17,34 @@ interface RegistrationData {
   }[];
 }
 
+// Map of country names to ISO codes
+const countryCodeMap: { [key: string]: string } = {
+  'United States': 'US',
+  'United Kingdom': 'GB',
+  'Canada': 'CA',
+  'Germany': 'DE',
+  'France': 'FR',
+  'Italy': 'IT',
+  'Spain': 'ES',
+  'Poland': 'PL',
+  'Ukraine': 'UA',
+  'Russia': 'RU',
+  'China': 'CN',
+  'Japan': 'JP',
+  'Australia': 'AU',
+  'Brazil': 'BR',
+  'India': 'IN',
+  // Add more countries as needed
+};
+
+const getCountryCode = (countryName: string): string => {
+  const code = countryCodeMap[countryName];
+  if (!code) {
+    throw new Error(`Invalid country name: ${countryName}. Please use a valid country name.`);
+  }
+  return code;
+};
+
 const getAnonymousToken = async () => {
   const clientId = process.env.REACT_APP_CTP_CLIENT_ID;
   const clientSecret = process.env.REACT_APP_CTP_CLIENT_SECRET;
@@ -75,7 +103,7 @@ export const registerCustomer = async (data: RegistrationData) => {
         streetName: address.street,
         city: address.city,
         postalCode: address.postalCode,
-        country: address.country,
+        country: getCountryCode(address.country),
         isDefault: address.isDefault || false,
         isBilling: address.isBilling || false,
         isShipping: address.isShipping || false,
@@ -123,6 +151,6 @@ export const registerCustomer = async (data: RegistrationData) => {
     }
 
     console.error('Registration failed:', error);
-    throw new Error('REGISTRATION_FAILED');
+    throw error; // Re-throw the error to preserve the original error message
   }
 }; 
