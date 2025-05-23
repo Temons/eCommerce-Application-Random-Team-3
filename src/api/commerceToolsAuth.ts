@@ -1,33 +1,33 @@
 import axios from 'axios';
 
-// console.log('CLIENT_ID:', process.env.REACT_APP_CTP_CLIENT_ID);
-// console.log('AUTH_URL:', process.env.REACT_APP_CTP_AUTH_URL);
-// console.log('PROJECT_KEY:', process.env.REACT_APP_CTP_PROJECT_KEY);
-// console.log('SCOPES:', process.env.REACT_APP_CTP_SCOPES);
-
 export const loginCustomer = async (email: string, password: string) => {
-  const {
-    REACT_APP_CTP_CLIENT_ID,
-    REACT_APP_CTP_CLIENT_SECRET,
-    REACT_APP_CTP_AUTH_URL,
-    REACT_APP_CTP_SCOPES,
-    REACT_APP_CTP_PROJECT_KEY,
-  } = process.env;
+  const clientId = process.env.REACT_APP_CTP_CLIENT_ID;
+  const clientSecret = process.env.REACT_APP_CTP_CLIENT_SECRET;
+  const authUrl = process.env.REACT_APP_CTP_AUTH_URL;
+  const scopes = process.env.REACT_APP_CTP_SCOPES;
+  const projectKey = process.env.REACT_APP_CTP_PROJECT_KEY;
 
-  if (!REACT_APP_CTP_AUTH_URL || !REACT_APP_CTP_PROJECT_KEY || !REACT_APP_CTP_CLIENT_ID || !REACT_APP_CTP_CLIENT_SECRET) {
+  // console.log('CLIENT_ID:', clientId);
+  // console.log('AUTH_URL:', authUrl);
+  // console.log('PROJECT_KEY:', projectKey);
+  // console.log('SCOPES:', scopes);
+  // console.log('CLIENT SECRET:', clientSecret);
+
+  if (!clientId || !clientSecret || !authUrl || !projectKey) {
     throw new Error('Missing environment variables for authentication');
   }
 
-  const url = `${REACT_APP_CTP_AUTH_URL}/oauth/${REACT_APP_CTP_PROJECT_KEY}/customers/token`;
+
+  const url = `${authUrl}/oauth/${projectKey}/customers/token`;
 
   const body = new URLSearchParams({
     grant_type: 'password',
     username: email,
     password: password,
-    scope: REACT_APP_CTP_SCOPES || '',
+    scope: scopes || '',
   });
 
-  const authHeader = btoa(`${REACT_APP_CTP_CLIENT_ID}:${REACT_APP_CTP_CLIENT_SECRET}`);
+  const authHeader = btoa(`${clientId}:${clientSecret}`);
 
   try {
     const response = await axios.post(url, body, {
