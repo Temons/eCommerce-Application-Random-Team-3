@@ -63,16 +63,28 @@ export const registerCustomer = async (data: RegistrationData) => {
 
     const url = `${apiUrl}/${projectKey}/customers`;
 
+    // Format the customer data according to CommerceTools API requirements
     const customerData = {
       email: data.email,
       password: data.password,
       firstName: data.firstName,
       lastName: data.lastName,
       dateOfBirth: data.dateOfBirth,
-      addresses: data.addresses,
+      addresses: data.addresses.map((address, index) => ({
+        key: `address-${index}`,
+        streetName: address.street,
+        city: address.city,
+        postalCode: address.postalCode,
+        country: address.country,
+        isDefault: address.isDefault || false,
+        isBilling: address.isBilling || false,
+        isShipping: address.isShipping || false,
+      })),
       defaultShippingAddress: 0,
       defaultBillingAddress: data.addresses.length > 1 ? 1 : 0,
     };
+
+    console.log('Sending customer data:', JSON.stringify(customerData, null, 2));
 
     const response = await axios.post(url, customerData, {
       headers: {
@@ -86,10 +98,21 @@ export const registerCustomer = async (data: RegistrationData) => {
     if (error instanceof AxiosError) {
       const status = error.response?.status;
       const message = error.response?.data?.message;
+      const errors = error.response?.data?.errors;
+
+      console.error('Registration error details:', {
+        status,
+        message,
+        errors,
+        response: error.response?.data,
+      });
 
       if (status === 400) {
         if (message?.includes('email')) {
           throw new Error('EMAIL_ALREADY_EXISTS');
+        }
+        if (errors) {
+          throw new Error(`INVALID_DATA: ${JSON.stringify(errors)}`);
         }
         throw new Error('INVALID_DATA');
       }
@@ -99,6 +122,7 @@ export const registerCustomer = async (data: RegistrationData) => {
       }
     }
 
+    console.error('Registration failed:', error);
     throw new Error('REGISTRATION_FAILED');
   }
 }; 
