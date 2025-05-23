@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 
 export const loginCustomer = async (email: string, password: string) => {
   const clientId = process.env.REACT_APP_CTP_CLIENT_ID;
@@ -38,11 +38,10 @@ export const loginCustomer = async (email: string, password: string) => {
     });
 
     return response.data;
-  } catch (error: unknown) {
-    if (axios.isAxiosError(error)) {
+  } catch (error) {
+    if (error instanceof AxiosError) {
       const status = error.response?.status;
       const message = error.response?.data?.message;
-
 
       if (status === 400 && message?.includes('credentials')) {
         throw new Error('INVALID_CREDENTIALS');

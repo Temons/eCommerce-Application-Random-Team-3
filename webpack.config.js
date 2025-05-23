@@ -12,21 +12,39 @@ export default {
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist'),
+    publicPath: '/',
   },
   resolve: {
-    extensions: ['.ts', '.js', '.tsx'],
+    extensions: ['.ts', '.tsx', '.js', '.jsx'],
+    alias: {
+      '@': path.resolve(__dirname, 'src'),
+    },
   },
   module: {
     rules: [
       {
         test: /\.(ts|tsx)$/,
-        use: 'ts-loader',
+        use: [
+          {
+            loader: 'ts-loader',
+            options: {
+              transpileOnly: true,
+              compilerOptions: {
+                module: 'ESNext',
+              },
+            },
+          },
+        ],
         exclude: /node_modules/,
       },
       {
         test: /\.s[ac]ss$/i,
         use: ['style-loader', 'css-loader', 'sass-loader'],
-      }
+      },
+      {
+        test: /\.(png|svg|jpg|jpeg|gif)$/i,
+        type: 'asset/resource',
+      },
     ],
   },
   plugins: [
@@ -40,8 +58,11 @@ export default {
     static: {
       directory: path.join(__dirname, 'dist'),
     },
-    open: true,
     historyApiFallback: true,
     hot: true,
+    port: 3000,
+    open: true,
   },
+  mode: 'development',
+  devtool: 'source-map',
 };
