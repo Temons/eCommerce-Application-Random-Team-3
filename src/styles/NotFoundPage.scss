@@ -1,0 +1,32 @@
+.not-found-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background-color: #EDEFEA;
+  height: 100vh;
+
+  .not-found-image {
+    width: 35%;
+    border-radius: 7px;
+  }
+
+  .back-home-button {
+    padding: 20px;
+    margin-top: 30px;
+    background-color: blanchedalmond;
+    border-radius: 7px;
+    border: 1px solid #BEC4BD;
+    background: #5E7668;
+    color: #BFCCC3;
+    font-family: "Inria Sans";
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+}
