@@ -1,0 +1,74 @@
+body {
+  margin: 0px;
+}
+
+.main-block {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: aliceblue;
+  height: 100vh;
+}
+
+.login-block {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 25px;
+  background-color: beige;
+  gap: 15px;
+}
+.login-block .login-form {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  gap: 20px;
+}
+.login-block .login-form .email-block-errors,
+.login-block .login-form .password-block-errors {
+  display: flex;
+  justify-content: start;
+  flex-direction: column;
+}
+.login-block .login-form .email-block-errors .email-block,
+.login-block .login-form .email-block-errors .password-block,
+.login-block .login-form .password-block-errors .email-block,
+.login-block .login-form .password-block-errors .password-block {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.login-block .login-form .email-block-errors .email-block input,
+.login-block .login-form .email-block-errors .password-block input,
+.login-block .login-form .password-block-errors .email-block input,
+.login-block .login-form .password-block-errors .password-block input {
+  padding: 5px;
+}
+.login-block .login-form .email-block-errors .error-placeholder,
+.login-block .login-form .password-block-errors .error-placeholder {
+  color: red;
+  margin: 0px;
+  min-height: 1.2rem;
+}
+.login-block .login-form .login-btn {
+  padding: 10px;
+}
+.login-block .login-form .register-link {
+  margin: 0px;
+}
+
+input.error {
+  border: 1px solid red;
+}
+
+.error-placeholder {
+  color: red;
+  font-size: 0.9rem;
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+}/*# sourceMappingURL=LoginPage.css.map */
