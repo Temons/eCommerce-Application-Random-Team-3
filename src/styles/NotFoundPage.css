@@ -23,6 +23,7 @@
   font-style: normal;
   font-weight: 400;
   line-height: normal;
+  text-decoration: none;
 }
 .not-found-container .back-home-button:hover {
   opacity: 0.9;
