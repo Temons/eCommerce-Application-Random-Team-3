@@ -55,3 +55,20 @@ export const loginCustomer = async (email: string, password: string) => {
     throw new Error('LOGIN_FAILED');
   }
 };
+
+export const getCustomerProfile = async (accessToken: string) => {
+  const {
+    REACT_APP_CTP_API_URL,
+    REACT_APP_CTP_PROJECT_KEY
+  } = process.env;
+
+  const url = `${REACT_APP_CTP_API_URL}/${REACT_APP_CTP_PROJECT_KEY}/me`;
+
+  const response = await axios.get(url, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  return response.data;
+};
