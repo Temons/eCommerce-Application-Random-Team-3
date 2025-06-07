@@ -8,14 +8,6 @@ import { useAuth } from '../contexts/AuthContext';
 
 
 const LoginPage = () => {
-  // console.log('AUTH URL:', process.env.REACT_APP_CTP_AUTH_URL);
-  // console.log('PROJECT KEY:', process.env.REACT_APP_CTP_PROJECT_KEY);
-  // console.log('CLIENT ID:', process.env.REACT_APP_CTP_CLIENT_ID);
-  // console.log('CLIENT SECRET:', process.env.REACT_APP_CTP_CLIENT_SECRET);
-  // console.log('SCOPES:', process.env.REACT_APP_CTP_SCOPES);
-  // console.log('API URL:', process.env.REACT_APP_CTP_API_URL);
-
-
 
   const navigate = useNavigate();
 

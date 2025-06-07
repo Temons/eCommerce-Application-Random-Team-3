@@ -1,4 +1,15 @@
 import axios, { AxiosError } from 'axios';
+import { Address } from 'cluster';
+
+interface CustomerProfile {
+  email: string;
+  firstName: string;
+  lastName: string;
+  dateOfBirth?: string;
+  addresses: Address[];
+  defaultBillingAddressId?: string;
+  defaultShippingAddressId?: string;
+}
 
 export const loginCustomer = async (email: string, password: string) => {
   const clientId = process.env.REACT_APP_CTP_CLIENT_ID;
@@ -6,12 +17,6 @@ export const loginCustomer = async (email: string, password: string) => {
   const authUrl = process.env.REACT_APP_CTP_AUTH_URL;
   const scopes = process.env.REACT_APP_CTP_SCOPES;
   const projectKey = process.env.REACT_APP_CTP_PROJECT_KEY;
-
-  // console.log('CLIENT_ID:', clientId);
-  // console.log('AUTH_URL:', authUrl);
-  // console.log('PROJECT_KEY:', projectKey);
-  // console.log('SCOPES:', scopes);
-  // console.log('CLIENT SECRET:', clientSecret);
 
   if (!clientId || !clientSecret || !authUrl || !projectKey) {
     throw new Error('Missing environment variables for authentication');
@@ -56,13 +61,20 @@ export const loginCustomer = async (email: string, password: string) => {
   }
 };
 
-export const getCustomerProfile = async (accessToken: string) => {
-  const {
-    REACT_APP_CTP_API_URL,
-    REACT_APP_CTP_PROJECT_KEY
-  } = process.env;
+export const getCustomerProfile = async (accessToken: string): Promise<CustomerProfile> => {
 
-  const url = `${REACT_APP_CTP_API_URL}/${REACT_APP_CTP_PROJECT_KEY}/me`;
+  const apiUrl = process.env.REACT_APP_CTP_API_URL;
+  const projectKey = process.env.REACT_APP_CTP_PROJECT_KEY;
+
+  console.log('API URL:', apiUrl);
+  console.log('Project Key:', projectKey);
+
+  if (!apiUrl || !projectKey) {
+    throw new Error('Missing API URL or Project Key in environment variables');
+  }
+
+
+  const url = `${apiUrl}/${projectKey}/me`;
 
   const response = await axios.get(url, {
     headers: {

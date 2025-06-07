@@ -1,0 +1,36 @@
+.profile-container {
+  padding: 2rem;
+}
+
+.personal-info, .address-section {
+  margin-bottom: 2rem;
+}
+
+.address-block {
+  border: 1px solid #ccc;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  position: relative;
+  border-radius: 8px;
+
+  &.billing {
+    border-color: #007bff;
+    background-color: #e6f0ff;
+  }
+
+  &.shipping {
+    border-color: #28a745;
+    background-color: #e9fbe9;
+  }
+
+  .badge {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background-color: #222;
+    color: #fff;
+    padding: 0.3rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+  }
+}
