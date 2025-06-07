@@ -93,18 +93,18 @@ export const getCustomerProfile = async (accessToken: string): Promise<CustomerP
 
   console.log('Fetched profile:', response.data);
 
-const data = response.data;
+  const data = response.data;
 
-return {
-  version: data.version,
-  email: data.email,
-  firstName: data.firstName,
-  lastName: data.lastName,
-  dateOfBirth: data.dateOfBirth,
-  addresses: data.addresses,
-  defaultBillingAddressId: data.defaultBillingAddressId,
-  defaultShippingAddressId: data.defaultShippingAddressId,
-};
+  return {
+    version: data.version,
+    email: data.email,
+    firstName: data.firstName,
+    lastName: data.lastName,
+    dateOfBirth: data.dateOfBirth,
+    addresses: data.addresses,
+    defaultBillingAddressId: data.defaultBillingAddressId,
+    defaultShippingAddressId: data.defaultShippingAddressId,
+  };
 
 };
 
@@ -144,4 +144,35 @@ export const updateCustomerProfile = async (token: string, updatedData: {
 
   const result = await response.json();
   return { version: result.version };
+};
+
+
+export const changeCustomerPassword = async (
+  token: string,
+  currentPassword: string,
+  newPassword: string,
+  version: number
+) => {
+  const apiUrl = process.env.REACT_APP_CTP_API_URL;
+  const projectKey = process.env.REACT_APP_CTP_PROJECT_KEY;
+
+  const response = await fetch(`${apiUrl}/${projectKey}/me/password`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      version,
+      currentPassword,
+      newPassword,
+    }),
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || 'Password change failed');
+  }
+
+  return await response.json();
 };

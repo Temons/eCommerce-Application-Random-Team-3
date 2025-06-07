@@ -81,4 +81,28 @@ button.save-button:hover {
   color: red;
   font-size: 0.8em;
   margin-top: 2px;
+}
+
+.change-password-section {
+  margin-top: 2rem;
+}
+.change-password-section label {
+  display: block;
+  margin: 0.5rem 0;
+}
+.change-password-section input {
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 0.25rem;
+}
+.change-password-section button {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: #0074d9;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+.change-password-section button:hover {
+  background-color: #005fa3;
 }/*# sourceMappingURL=UserProfilePage.css.map */

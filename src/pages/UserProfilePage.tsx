@@ -6,6 +6,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { updateCustomerProfile } from '../api/commerceToolsAuth';
 import { validateEmail, validateRequired, validateDateOfBirth } from '../utils/validation';
+import { changeCustomerPassword } from '../api/commerceToolsAuth';
 
 
 interface Address {
@@ -34,6 +35,10 @@ const UserProfilePage = () => {
   const [newLastName, setNewLastName] = useState('');
   const [newDateOfBirth, setNewDateOfBirth] = useState('');
   const [newEmail, setNewEmail] = useState('');
+
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
   const [errors, setErrors] = React.useState<{ [key: string]: string | undefined }>({});
 
@@ -117,6 +122,49 @@ const UserProfilePage = () => {
     return !Object.values(newErrors).some(Boolean);
   };
 
+  const handleChangePassword = async () => {
+    if (!authToken) return;
+
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      toast.error('Please fill all password fields');
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      toast.error('New passwords do not match');
+      return;
+    }
+
+    if (newPassword.length < 8) {
+      toast.error('Password must be at least 8 characters');
+      return;
+    }
+
+    try {
+      const result = await changeCustomerPassword(
+        authToken,
+        currentPassword,
+        newPassword,
+        version
+      );
+
+      setVersion(result.version);
+      setCurrentPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
+      toast.success('Password changed successfully');
+    } catch (error: unknown) {
+  if (error instanceof Error) {
+    console.error('Password change failed:', error);
+    toast.error(error.message || 'Failed to change password');
+  } else {
+    console.error('Unexpected error', error);
+    toast.error('Failed to change password');
+  }
+}
+  };
+
+
 
 
   return (
@@ -134,10 +182,10 @@ const UserProfilePage = () => {
             <label>
               First Name:
               <input
-  value={newFirstName}
-  onChange={(e) => setNewFirstName(e.target.value)}
-  className={`${editMode ? 'editable-field' : ''} ${errors.firstName ? 'input-error' : ''}`}
-/>
+                value={newFirstName}
+                onChange={(e) => setNewFirstName(e.target.value)}
+                className={`${editMode ? 'editable-field' : ''} ${errors.firstName ? 'input-error' : ''}`}
+              />
 
               {errors.firstName && <div className="error-message">{errors.firstName}</div>}
 
@@ -145,10 +193,10 @@ const UserProfilePage = () => {
             <label>
               Last Name:
               <input
-  value={newLastName}
-  onChange={(e) => setNewLastName(e.target.value)}
-  className={`${editMode ? 'editable-field' : ''} ${errors.lastName ? 'input-error' : ''}`}
-/>
+                value={newLastName}
+                onChange={(e) => setNewLastName(e.target.value)}
+                className={`${editMode ? 'editable-field' : ''} ${errors.lastName ? 'input-error' : ''}`}
+              />
 
               {errors.lastName && <div className="error-message">{errors.lastName}</div>}
 
@@ -156,20 +204,20 @@ const UserProfilePage = () => {
             <label>
               Date of Birth:
               <input
-  type="date"
-  value={newDateOfBirth}
-  onChange={(e) => setNewDateOfBirth(e.target.value)}
-  className={`${editMode ? 'editable-field' : ''} ${errors.dateOfBirth ? 'input-error' : ''}`}
-/>
-{errors.dateOfBirth && <div className="error-message">{errors.dateOfBirth}</div>}
+                type="date"
+                value={newDateOfBirth}
+                onChange={(e) => setNewDateOfBirth(e.target.value)}
+                className={`${editMode ? 'editable-field' : ''} ${errors.dateOfBirth ? 'input-error' : ''}`}
+              />
+              {errors.dateOfBirth && <div className="error-message">{errors.dateOfBirth}</div>}
 
-<input
-  type="email"
-  value={newEmail}
-  onChange={(e) => setNewEmail(e.target.value)}
-  className={`${editMode ? 'editable-field' : ''} ${errors.email ? 'input-error' : ''}`}
-/>
-{errors.email && <div className="error-message">{errors.email}</div>}
+              <input
+                type="email"
+                value={newEmail}
+                onChange={(e) => setNewEmail(e.target.value)}
+                className={`${editMode ? 'editable-field' : ''} ${errors.email ? 'input-error' : ''}`}
+              />
+              {errors.email && <div className="error-message">{errors.email}</div>}
 
             </label>
             <button className="save-button" onClick={handleSave}>Save Changes</button>
@@ -210,6 +258,35 @@ const UserProfilePage = () => {
           })
         )}
       </div>
+      <div className="change-password-section">
+        <h2>Change Password</h2>
+        <label>
+          Current Password:
+          <input
+            type="password"
+            value={currentPassword}
+            onChange={(e) => setCurrentPassword(e.target.value)}
+          />
+        </label>
+        <label>
+          New Password:
+          <input
+            type="password"
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+          />
+        </label>
+        <label>
+          Confirm New Password:
+          <input
+            type="password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+          />
+        </label>
+        <button onClick={handleChangePassword}>Save Password</button>
+      </div>
+
     </div>
   );
 };
