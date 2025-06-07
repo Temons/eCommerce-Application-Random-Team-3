@@ -70,3 +70,18 @@ button.save-button {
 button.save-button:hover {
   background-color: #218838;
 }
+
+.editable-field {
+  background-color: #f0f8ff;
+  border: 1px solid #007bff;
+}
+
+.input-error {
+  border-color: red;
+}
+
+.error-message {
+  color: red;
+  font-size: 0.8em;
+  margin-top: 2px;
+}

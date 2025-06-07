@@ -5,6 +5,8 @@ import { useAuth } from '../contexts/AuthContext';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { updateCustomerProfile } from '../api/commerceToolsAuth';
+import { validateEmail, validateRequired, validateDateOfBirth } from '../utils/validation';
+
 
 interface Address {
   id: string;
@@ -32,6 +34,8 @@ const UserProfilePage = () => {
   const [newLastName, setNewLastName] = useState('');
   const [newDateOfBirth, setNewDateOfBirth] = useState('');
   const [newEmail, setNewEmail] = useState('');
+
+  const [errors, setErrors] = React.useState<{ [key: string]: string | undefined }>({});
 
   useEffect(() => {
     if (!authToken) return;
@@ -65,27 +69,18 @@ const UserProfilePage = () => {
   const handleSave = async () => {
     if (!authToken) return;
 
-    if (!newFirstName.trim()) {
-      toast.error('First name cannot be empty.');
-      return;
-    }
-    if (!newLastName.trim()) {
-      toast.error('Last name cannot be empty.');
-      return;
-    }
-    if (!newEmail.trim()) {
-      toast.error('Email cannot be empty.');
+    if (!validateAll()) {
       return;
     }
 
     try {
       const { version: newVersion } = await updateCustomerProfile(authToken, {
-  version,
-  firstName: newFirstName,
-  lastName: newLastName,
-  dateOfBirth: newDateOfBirth,
-  email: newEmail,
-});
+        version,
+        firstName: newFirstName,
+        lastName: newLastName,
+        dateOfBirth: newDateOfBirth,
+        email: newEmail,
+      });
 
 
       setFirstName(newFirstName);
@@ -110,6 +105,20 @@ const UserProfilePage = () => {
     setEditMode(false);
   };
 
+  const validateAll = () => {
+    const newErrors: typeof errors = {};
+
+    newErrors.firstName = validateRequired(newFirstName, 'First name');
+    newErrors.lastName = validateRequired(newLastName, 'Last name');
+    newErrors.email = validateEmail(newEmail);
+    newErrors.dateOfBirth = validateDateOfBirth(newDateOfBirth);
+
+    setErrors(newErrors);
+    return !Object.values(newErrors).some(Boolean);
+  };
+
+
+
   return (
     <div className="profile-container">
       <ToastContainer />
@@ -124,19 +133,44 @@ const UserProfilePage = () => {
           <div className='edit-mode-container'>
             <label>
               First Name:
-              <input value={newFirstName} onChange={(e) => setNewFirstName(e.target.value)} />
+              <input
+  value={newFirstName}
+  onChange={(e) => setNewFirstName(e.target.value)}
+  className={`${editMode ? 'editable-field' : ''} ${errors.firstName ? 'input-error' : ''}`}
+/>
+
+              {errors.firstName && <div className="error-message">{errors.firstName}</div>}
+
             </label>
             <label>
               Last Name:
-              <input value={newLastName} onChange={(e) => setNewLastName(e.target.value)} />
+              <input
+  value={newLastName}
+  onChange={(e) => setNewLastName(e.target.value)}
+  className={`${editMode ? 'editable-field' : ''} ${errors.lastName ? 'input-error' : ''}`}
+/>
+
+              {errors.lastName && <div className="error-message">{errors.lastName}</div>}
+
             </label>
             <label>
               Date of Birth:
-              <input type="date" value={newDateOfBirth} onChange={(e) => setNewDateOfBirth(e.target.value)} />
-            </label>
-            <label>
-              Email:
-              <input type="email" value={newEmail} onChange={(e) => setNewEmail(e.target.value)} />
+              <input
+  type="date"
+  value={newDateOfBirth}
+  onChange={(e) => setNewDateOfBirth(e.target.value)}
+  className={`${editMode ? 'editable-field' : ''} ${errors.dateOfBirth ? 'input-error' : ''}`}
+/>
+{errors.dateOfBirth && <div className="error-message">{errors.dateOfBirth}</div>}
+
+<input
+  type="email"
+  value={newEmail}
+  onChange={(e) => setNewEmail(e.target.value)}
+  className={`${editMode ? 'editable-field' : ''} ${errors.email ? 'input-error' : ''}`}
+/>
+{errors.email && <div className="error-message">{errors.email}</div>}
+
             </label>
             <button className="save-button" onClick={handleSave}>Save Changes</button>
             <button onClick={handleCancel}>Cancel</button>
