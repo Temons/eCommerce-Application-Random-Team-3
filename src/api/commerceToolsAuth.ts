@@ -1,7 +1,15 @@
 import axios, { AxiosError } from 'axios';
-import { Address } from 'cluster';
+
+interface Address {
+  id: string;
+  streetName: string;
+  city: string;
+  postalCode: string;
+  country: string;
+}
 
 interface CustomerProfile {
+  version: number;
   email: string;
   firstName: string;
   lastName: string;
@@ -82,5 +90,58 @@ export const getCustomerProfile = async (accessToken: string): Promise<CustomerP
     },
   });
 
-  return response.data;
+
+  console.log('Fetched profile:', response.data);
+
+const data = response.data;
+
+return {
+  version: data.version,
+  email: data.email,
+  firstName: data.firstName,
+  lastName: data.lastName,
+  dateOfBirth: data.dateOfBirth,
+  addresses: data.addresses,
+  defaultBillingAddressId: data.defaultBillingAddressId,
+  defaultShippingAddressId: data.defaultShippingAddressId,
+};
+
+};
+
+export const updateCustomerProfile = async (token: string, updatedData: {
+  version: number;
+  firstName: string;
+  lastName: string;
+  dateOfBirth: string;
+  email: string;
+}) => {
+
+
+
+  const apiUrl = process.env.REACT_APP_CTP_API_URL;
+  const projectKey = process.env.REACT_APP_CTP_PROJECT_KEY;
+
+  const response = await fetch(`${apiUrl}/${projectKey}/me`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      version: updatedData.version,
+      actions: [
+        { action: 'setFirstName', firstName: updatedData.firstName },
+        { action: 'setLastName', lastName: updatedData.lastName },
+        { action: 'setDateOfBirth', dateOfBirth: updatedData.dateOfBirth },
+        { action: 'changeEmail', email: updatedData.email },
+      ],
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to update profile');
+  }
+
+  const result = await response.json();
+  return { version: result.version };
 };
