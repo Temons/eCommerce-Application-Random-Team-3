@@ -5,14 +5,24 @@ import RegistrationPage from './pages/RegistrationPage';
 import MainPage from './pages/MainPage';
 import { AuthProvider } from './contexts/AuthContext';
 import NotFoundPage from './pages/NotFoundPage';
+import UserProfilePage from './pages/UserProfilePage';
+import Layout from './components/Layout';
 
 const App = () => (
-  <AuthProvider>
+    <AuthProvider>
     <Router>
       <Routes>
-        <Route path="/main" element={<MainPage />} />
+
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegistrationPage />} />
+
+
+        <Route element={<Layout />}>
+          <Route path="/main" element={<MainPage />} />
+          <Route path="/profile" element={<UserProfilePage />} />
+        </Route>
+
+
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Router>
