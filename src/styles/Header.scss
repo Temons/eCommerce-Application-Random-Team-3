@@ -1,0 +1,20 @@
+.app-header {
+  background-color: #f8f8f8;
+  padding: 1rem;
+  border-bottom: 1px solid #ccc;
+
+  nav ul {
+    list-style: none;
+    display: flex;
+    gap: 1rem;
+  }
+
+  a {
+    text-decoration: none;
+    color: #333;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
