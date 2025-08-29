@@ -1,0 +1,44 @@
+# Node modules
+node_modules/
+
+# Build output
+dist/
+build/
+.idea
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# dotenv environment variables
+.env
+.env.local
+.env.*.local
+
+# VS Code settings
+.vscode/
+
+# MacOS system files
+.DS_Store
+
+# Webpack cache
+.cache/
+webpack-cache/
+
+# Coverage directory used by testing tools
+coverage/
+
+# Optional npm cache directory
+.npm/
+
+# Optional eslint cache
+.eslintcache
+
+# Optional stylelint cache
+.stylelintcache
+
+package-lock.json
